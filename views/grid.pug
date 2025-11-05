@@ -1,6 +1,31 @@
 extends layout
 
 block content
-  h1= title 
-  p Grid Display
+  h1= title
+  p Grid display built dynamically from query parameters
 
+  // Show the raw query values
+  p Rows: #{query.rows}, Cols: #{query.cols}
+
+  // Convert query strings to numbers
+  - const rows = Number(query.rows);
+  - const cols = Number(query.cols);
+
+  // Validate input
+  if !Number.isInteger(rows) || !Number.isInteger(cols)
+    p One or both values are not valid integers.
+  else if rows < 3 || rows > 13
+    p Row count must be between 3 and 13.
+  else if cols < 3 || cols > 13
+    p Column count must be between 3 and 13.
+  else
+    // Table block starts here
+    table#outer.table.table-bordered.mt-3
+      // Outer loop for rows
+      - for (let i = 0; i < rows; i++) {
+        tr
+          // Inner loop for columns
+          - for (let j = 0; j < cols; j++) {
+            td= i + 2 * j
+          - }
+      - }
